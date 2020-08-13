@@ -52,4 +52,4 @@ password anywhere - it simply exchanges it for cookies that get written to `$WEB
 as `cookies.json` exists, whenever you run `webdiplomacy-poller` it will read the cookies from that file.
 
 ## Slack Integration
-I've hand-created a Webhook-triggered Workflow.  I'll commit the JSON representation of that and the icon in a bit.
+See the [`slack`](slack) directory for files directly related to the Slack Workflow integration.  You can load the [`webdiplomacy_poller.slackworkflow`](slack/webdiplomacy_poller.slackworkflow) into Slack to create the basic workflow, and use the [`webDiplomacy-D.png`](slack/webDiplomacy-D.png) file as it's icon.  Creating and Publishing that workflow will generate the webhook URL that you can use for `SLACK_WEBHOOK_URL`.
