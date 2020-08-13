@@ -1,0 +1,31 @@
+plugins {
+    id 'application'
+}
+
+group 'com.robwettach.webdiplomacy'
+version '0.1'
+mainClassName = 'com.robwettach.webdiplomacy.poller.Main'
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType(JavaCompile) {
+    // Enable Jackson's `ParameterNamesModule` to avoid using `@JsonProperty("name")` syntax
+    options.compilerArgs += "-parameters"
+}
+
+dependencies {
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.11.2'
+    // Use 'api' rather than 'implementation' for Android or java-library projects.
+    implementation group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
+    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    implementation group: 'one.util', name: 'streamex', version: '0.7.3'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.2'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+}
