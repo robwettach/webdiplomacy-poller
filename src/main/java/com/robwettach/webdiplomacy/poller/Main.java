@@ -2,7 +2,6 @@ package com.robwettach.webdiplomacy.poller;
 
 import com.robwettach.webdiplomacy.model.GameState;
 import com.robwettach.webdiplomacy.notify.CompositeNotifier;
-import com.robwettach.webdiplomacy.notify.Diff;
 import com.robwettach.webdiplomacy.notify.GameNotifications;
 import com.robwettach.webdiplomacy.notify.Notifier;
 import com.robwettach.webdiplomacy.notify.SlackNotifier;
@@ -27,6 +26,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Main {
 
@@ -39,13 +39,14 @@ public class Main {
         HistoryStore history = new LocalHistoryStore(getConfigDir());
         history.load();
 
-        Map<Integer, GameNotifications> notifications = prepopulateNotificationState(history);
+        Notifier notifier = getNotifier();
+        Map<Integer, GameNotifications> notifications = prepopulateNotificationState(history, notifier);
 
 
         ScheduledExecutorService schedule = Executors.newSingleThreadScheduledExecutor();
 
         ScheduledFuture<?> result = schedule.scheduleAtFixedRate(
-                () -> checkForUpdates(cookies, history, notifications),
+                () -> checkForUpdates(cookies, history, notifications, notifier),
                 0,
                 2,
                 TimeUnit.MINUTES);
@@ -60,25 +61,28 @@ public class Main {
         }
     }
 
-    private static Map<Integer, GameNotifications> prepopulateNotificationState(HistoryStore history) {
+    private static Map<Integer, GameNotifications> prepopulateNotificationState(
+            HistoryStore history,
+            Notifier notifier) {
         Map<Integer, GameNotifications> notifications = new HashMap<>();
         history.getGameIds().forEach(gameId -> {
             List<Snapshot> snapshots = history.getSnapshotsForGame(gameId);
-
-            List<Notifier> notifiers = new ArrayList<>();
-            notifiers.add(StdOutNotifier.create());
-            String webhookUrl = System.getenv(ENV_SLACK_WEBHOOK_URL);
-            if (webhookUrl != null) {
-                notifiers.add(SlackNotifier.create(webhookUrl));
-            }
-
-            GameNotifications gameNotifications = new GameNotifications(
-                    gameId,
-                    CompositeNotifier.create(notifiers));
+            GameNotifications gameNotifications = new GameNotifications(gameId, notifier);
             notifications.put(gameId, gameNotifications);
             snapshots.stream().map(Snapshot::getState).forEach(gameNotifications::updateSilently);
         });
         return notifications;
+    }
+
+    private static Notifier getNotifier() {
+        List<Notifier> notifiers = new ArrayList<>();
+        notifiers.add(StdOutNotifier.create());
+        String webhookUrl = System.getenv(ENV_SLACK_WEBHOOK_URL);
+        if (webhookUrl != null) {
+            notifiers.add(SlackNotifier.create(webhookUrl));
+        }
+
+        return CompositeNotifier.create(notifiers);
     }
 
     private static void ensureConfigDirectory() {
@@ -103,29 +107,31 @@ public class Main {
     private static void checkForUpdates(
             Map<String, String> cookies,
             HistoryStore history,
-            Map<Integer, GameNotifications> notifications) {
+            Map<Integer, GameNotifications> notifications, Notifier notifier) {
         ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
         Map<Integer, GameState> games = getGames(cookies);
         System.out.print(".");
 
-        boolean hasUpdates = false;
-        for (Map.Entry<Integer, GameState> entry : games.entrySet()) {
-            Integer id = entry.getKey();
-            GameState state = entry.getValue();
-            Optional<Snapshot> previous = history.getLatestSnapshotForGame(id);
+        AtomicBoolean hasUpdates = new AtomicBoolean(false);
+        games.forEach((id, state) -> {
             Snapshot current = Snapshot.create(snapshotDate, state);
 
-            notifications.get(id).updateAndNotify(state);
+            GameNotifications gameNotifications = notifications.computeIfAbsent(
+                    id,
+                    gameId -> new GameNotifications(gameId, notifier));
+            gameNotifications.updateAndNotify(state);
 
             // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
             // We track more pieces of state than we notify about (SC/unit count, messages), and we want to notify
             // even if there's no state change, specifically for the "one hour remaining" case.
+            Optional<Snapshot> previous = history.getLatestSnapshotForGame(id);
             if (previous.isEmpty() || !previous.get().getState().equals(current.getState())) {
                 history.addSnapshot(id, current);
-                hasUpdates = true;
+                hasUpdates.set(true);
             }
-        }
-        if (hasUpdates) {
+        });
+
+        if (hasUpdates.get()) {
             history.save();
         }
     }
