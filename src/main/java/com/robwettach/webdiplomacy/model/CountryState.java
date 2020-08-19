@@ -23,7 +23,9 @@ public abstract class CountryState {
     public abstract Set<Vote> getVotes();
 
     public static Builder builder() {
-        return Builder.builder();
+        return Builder.builder()
+                .currentUser(false)
+                .messageUnread(false);
     }
 
     @Override

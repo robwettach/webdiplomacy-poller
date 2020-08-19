@@ -6,9 +6,7 @@ import com.robwettach.webdiplomacy.notify.GameNotifications;
 import com.robwettach.webdiplomacy.notify.Notifier;
 import com.robwettach.webdiplomacy.notify.SlackNotifier;
 import com.robwettach.webdiplomacy.notify.StdOutNotifier;
-import com.robwettach.webdiplomacy.page.GameListingsPage;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import com.robwettach.webdiplomacy.page.GameBoardPage;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,27 +24,29 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class Main {
 
     public static final String ENV_SLACK_WEBHOOK_URL = "SLACK_WEBHOOK_URL";
     public static final String ENV_WEBDIP_POLLER_HOME = "WEBDIP_POLLER_HOME";
 
-    public static void main(String... args) throws ExecutionException, InterruptedException {
+    public static void main(String... args) throws InterruptedException {
+        checkArgument(args.length == 1, "Must provide a game ID");
+        int gameId = Integer.parseInt(args[0]);
+
         ensureConfigDirectory();
-        Map<String, String> cookies = new LocalCookieProvider(getConfigDir()).getCookies();
         HistoryStore history = new LocalHistoryStore(getConfigDir());
         history.load();
 
         Notifier notifier = getNotifier();
         Map<Integer, GameNotifications> notifications = prepopulateNotificationState(history, notifier);
 
-
         ScheduledExecutorService schedule = Executors.newSingleThreadScheduledExecutor();
 
         ScheduledFuture<?> result = schedule.scheduleAtFixedRate(
-                () -> checkForUpdates(cookies, history, notifications, notifier),
+                () -> checkForUpdates(gameId, history, notifications, notifier),
                 0,
                 2,
                 TimeUnit.MINUTES);
@@ -105,50 +105,37 @@ public class Main {
     }
 
     private static void checkForUpdates(
-            Map<String, String> cookies,
+            int gameId,
             HistoryStore history,
-            Map<Integer, GameNotifications> notifications, Notifier notifier) {
-        ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
-        Map<Integer, GameState> games = getGames(cookies);
+            Map<Integer, GameNotifications> notifications,
+            Notifier notifier) {
+        GameBoardPage page;
+        try {
+            page = new GameBoardPage(gameId);
+        } catch (IOException e) {
+            System.err.println("Failed to load webDiplomacy game board page for game: " + gameId);
+            e.printStackTrace();
+            return;
+        }
+
+        GameState state = page.getGame();
         System.out.print(".");
 
-        AtomicBoolean hasUpdates = new AtomicBoolean(false);
-        games.forEach((id, state) -> {
-            Snapshot current = Snapshot.create(snapshotDate, state);
+        ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
+        Snapshot current = Snapshot.create(snapshotDate, state);
 
-            GameNotifications gameNotifications = notifications.computeIfAbsent(
-                    id,
-                    gameId -> new GameNotifications(gameId, notifier));
-            gameNotifications.updateAndNotify(state);
+        GameNotifications gameNotifications = notifications.computeIfAbsent(
+                gameId,
+                id -> new GameNotifications(id, notifier));
+        gameNotifications.updateAndNotify(state);
 
-            // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
-            // We track more pieces of state than we notify about (SC/unit count, messages), and we want to notify
-            // even if there's no state change, specifically for the "one hour remaining" case.
-            Optional<Snapshot> previous = history.getLatestSnapshotForGame(id);
-            if (previous.isEmpty() || !previous.get().getState().equals(current.getState())) {
-                history.addSnapshot(id, current);
-                hasUpdates.set(true);
-            }
-        });
-
-        if (hasUpdates.get()) {
+        // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
+        // We track more pieces of state than we notify about (SC/unit count, etc), and we want to notify
+        // even if there's no state change, specifically for the "one hour remaining" case.
+        Optional<Snapshot> previous = history.getLatestSnapshotForGame(gameId);
+        if (previous.isEmpty() || !previous.get().getState().equals(current.getState())) {
+            history.addSnapshot(gameId, current);
             history.save();
         }
-    }
-
-    private static Map<Integer, GameState> getGames(Map<String, String> cookies) {
-        Document loggedInDoc = null;
-        try {
-            loggedInDoc = Jsoup.connect("http://webdiplomacy.net/gamelistings.php?gamelistType=My%20games")
-                    .cookies(cookies)
-                    .get();
-        } catch (IOException e) {
-            System.err.println("Failed to get game listing");
-            e.printStackTrace();
-        }
-
-        GameListingsPage page = new GameListingsPage(loggedInDoc);
-
-        return page.getGames();
     }
 }

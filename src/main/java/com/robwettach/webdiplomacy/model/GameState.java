@@ -35,6 +35,8 @@ public abstract class GameState {
         return Builder.builder();
     }
 
+    public abstract Builder toBuilder();
+
     @Override
     public String toString() {
         return format(

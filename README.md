@@ -46,10 +46,11 @@ environment variables that you may set:
 * `WEBDIP_POLLER_HOME` - by default, `webdiplomacy-poller` stores state information in `~/.config/webdip-poller`.  Set
   this variable to store the config in a custom directory.
 
-The first time you run `webdiplomacy-poller` it will ask you for your username and password for
-https://webDiplomacy.net.  *webDiplomacy* doesn't have too-great security on their login, so the app doesn't store this
-password anywhere - it simply exchanges it for cookies that get written to `$WEBDIP_POLLER_HOME/cookies.json`.  As long
-as `cookies.json` exists, whenever you run `webdiplomacy-poller` it will read the cookies from that file.
+webDiplomacy Poller polls a single publicly-accessible game by ID passed as a command line parameter.  You can specify
+this parameter both via `./gradlew run --args 1234` and `webdiplomacy-poller 1234`.
 
 ## Slack Integration
-See the [`slack`](slack) directory for files directly related to the Slack Workflow integration.  You can load the [`webdiplomacy_poller.slackworkflow`](slack/webdiplomacy_poller.slackworkflow) into Slack to create the basic workflow, and use the [`webDiplomacy-D.png`](slack/webDiplomacy-D.png) file as it's icon.  Creating and Publishing that workflow will generate the webhook URL that you can use for `SLACK_WEBHOOK_URL`.
+See the [`slack`](slack) directory for files directly related to the Slack Workflow integration.  You can load the
+[`webdiplomacy_poller.slackworkflow`](slack/webdiplomacy_poller.slackworkflow) into Slack to create the basic workflow,
+and use the [`webDiplomacy-D.png`](slack/webDiplomacy-D.png) file as it's icon.  Creating and Publishing that workflow
+will generate the webhook URL that you can use for `SLACK_WEBHOOK_URL`.

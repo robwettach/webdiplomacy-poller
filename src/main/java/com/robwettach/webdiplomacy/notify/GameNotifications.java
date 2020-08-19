@@ -17,8 +17,6 @@ public class GameNotifications {
             new HourRemainingChecker(),
             new PausedChecker(),
             new OrderChecker(),
-            new VoteChecker(),
-            new MessageChecker(),
             new DefeatedChecker());
 
     public GameNotifications(int gameId, Notifier notifier) {
