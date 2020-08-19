@@ -15,5 +15,4 @@ public interface HistoryStore {
     void addSnapshot(int gameId, Snapshot snapshot);
 
     void save();
-
 }
