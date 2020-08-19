@@ -11,8 +11,11 @@ import javax.annotation.Nullable;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static java.lang.String.format;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 @AutoValue
@@ -25,6 +28,14 @@ public abstract class GameState {
     public abstract boolean isPaused();
     public abstract Optional<ZonedDateTime> getNextTurnAt();
     public abstract ImmutableSet<CountryState> getCountries();
+
+    @JsonIgnore
+    public ImmutableSet<CountryState> getActiveCountries() {
+        return getCountries()
+                .stream()
+                .filter(not(c -> c.getStatus().equals(CountryStatus.Defeated)))
+                .collect(toImmutableSet());
+    }
 
     @JsonIgnore
     public DatePhase getDatePhase() {

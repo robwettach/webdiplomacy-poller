@@ -27,7 +27,7 @@ public class OrderChecker implements DiffChecker {
     }
 
     private void checkNotSubmitted(GameState state, List<Diff> diffs) {
-        List<String> notSubmittedCountries = state.getCountries()
+        List<String> notSubmittedCountries = state.getActiveCountries()
                 .stream()
                 .filter(c -> c.getStatus().equals(CountryStatus.NotReceived))
                 .map(CountryState::getCountryName)
@@ -46,11 +46,10 @@ public class OrderChecker implements DiffChecker {
 
     private static final Set<CountryStatus> EFFECTIVELY_READY_STATUSES = ImmutableSet.of(
             CountryStatus.Ready,
-            CountryStatus.NoOrders,
-            CountryStatus.Defeated);
+            CountryStatus.NoOrders);
 
     private void checkNotReady(GameState state, List<Diff> diffs) {
-        List<String> notReadyCountries = state.getCountries()
+        List<String> notReadyCountries = state.getActiveCountries()
                 .stream()
                 .filter(c -> !EFFECTIVELY_READY_STATUSES.contains(c.getStatus()))
                 .map(CountryState::getCountryName)

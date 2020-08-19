@@ -62,6 +62,13 @@ public class MembersTable {
             countryBuilder.unitCount(Integer.parseInt(scUnitMatcher.group(UNITS_KEY)));
         }
 
+        Element votes = countryElement.select(".memberVotes").first();
+        if (votes != null) {
+            countryBuilder.votes(COMMA_SPLITTER.splitToStream(votes.text())
+                    .map(Vote::valueOf)
+                    .collect(toSet()));
+        }
+
         return countryBuilder.build();
     }
 

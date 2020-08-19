@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 @AutoValue
 @JsonDeserialize(builder = CountryState.Builder.class)
@@ -31,14 +32,15 @@ public abstract class CountryState {
     @Override
     public String toString() {
         return format(
-                "%s%s (%s): %s%s (%d sc, %d u)",
+                "%s%s (%s): %s%s (%d sc, %d u) %s",
                 isCurrentUser() ? "* " : "",
                 getCountryName(),
                 getUser().getName(),
                 getStatus(),
                 isMessageUnread() ? " - Unread Message" : "",
                 getSupplyCenterCount(),
-                getUnitCount());
+                getUnitCount(),
+                getVotes().isEmpty() ? "" : "Votes: " + getVotes().stream().map(Vote::toString).collect(joining(", ")));
     }
 
     @AutoValue.Builder

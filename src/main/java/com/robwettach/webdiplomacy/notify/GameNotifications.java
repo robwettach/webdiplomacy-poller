@@ -17,7 +17,8 @@ public class GameNotifications {
             new HourRemainingChecker(),
             new PausedChecker(),
             new OrderChecker(),
-            new DefeatedChecker());
+            new DefeatedChecker(),
+            new VoteChecker());
 
     public GameNotifications(int gameId, Notifier notifier) {
         this.gameId = gameId;
