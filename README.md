@@ -54,3 +54,10 @@ See the [`slack`](slack) directory for files directly related to the Slack Workf
 [`webdiplomacy_poller.slackworkflow`](slack/webdiplomacy_poller.slackworkflow) into Slack to create the basic workflow,
 and use the [`webDiplomacy-D.png`](slack/webDiplomacy-D.png) file as it's icon.  Creating and Publishing that workflow
 will generate the webhook URL that you can use for `SLACK_WEBHOOK_URL`.
+
+## Contributing
+This repo uses [`commitlint`](https://commitlint.js.org/) to enforce commit message guidelines, and
+[Husky](https://github.com/typicode/husky) to make that easy.  It does require you to have NodeJS installed and to run
+`npm install` when first checking out the package.  From then on out, Husky will enforce *all* commit messages match
+the default `commitlint` format.  We also have `commitlint`'s CLI set up via `npm run commit` that will help writing
+valid commit messages.
