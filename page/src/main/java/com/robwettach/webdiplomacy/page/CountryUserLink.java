@@ -8,6 +8,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 
+/**
+ * Representation of a player in the countries table.
+ *
+ * <p>Includes the player's name, ID and current points.
+ */
 @AutoValue
 public abstract class CountryUserLink {
     private static final String POINTS_KEY = "points";
@@ -18,6 +23,12 @@ public abstract class CountryUserLink {
     public abstract String getName();
     public abstract int getPoints();
 
+    /**
+     * Extract a {@link CountryUserLink} instance from a given HTML {@link Element}.
+     *
+     * @param element The HTML {@link Element} containing the user link
+     * @return A {@link CountryUserLink} instance
+     */
     public static CountryUserLink fromElement(Element element) {
         Element userA = element.select("a").first();
         String name = userA.text();

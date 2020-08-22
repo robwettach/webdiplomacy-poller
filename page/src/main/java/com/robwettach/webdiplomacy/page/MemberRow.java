@@ -11,6 +11,9 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+/**
+ * Representation of a row in a {@link MembersTable}.
+ */
 @AutoValue
 public abstract class MemberRow {
     private static final Splitter COMMA_SPLITTER = Splitter.on(",").trimResults();
@@ -29,7 +32,12 @@ public abstract class MemberRow {
     public abstract int getUnitCount();
     public abstract ImmutableSet<String> getVotes();
 
-
+    /**
+     * Extract a {@link MemberRow} from an HTML {@link Element}.
+     *
+     * @param element The HTML {@link Element} containing the row
+     * @return A {@link MemberRow} instance
+     */
     public static MemberRow fromElement(Element element) {
         String countryName = element.select(".memberCountryName > span[class~=country\\d+]").first().text();
         Element statusImg = element.select("span[class*=\"StatusIcon\"] > img").first();

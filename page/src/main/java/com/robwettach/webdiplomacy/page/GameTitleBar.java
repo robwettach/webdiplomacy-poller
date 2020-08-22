@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.jsoup.nodes.Element;
 
+/**
+ * Representation of a <em>webDiplomacy</em> game's title bar.
+ */
 @AutoValue
 public abstract class GameTitleBar {
     public abstract String getName();
@@ -15,10 +18,24 @@ public abstract class GameTitleBar {
     public abstract boolean isPaused();
     public abstract Optional<ZonedDateTime> getNextTurnAt();
 
+    /**
+     * Extract a {@link GameTitleBar} from a parent HTML {@link Element}.
+     *
+     * <p>The {@code parent} element is expected to contain a {@code div} with class {@code titleBar}.
+     *
+     * @param parent The parent HTML {@link Element} containing the title bar
+     * @return A {@link GameTitleBar} instance
+     */
     public static GameTitleBar fromParent(Element parent) {
         return fromElement(parent.select(".titleBar").first());
     }
 
+    /**
+     * Extract a {@link GameTitleBar} from an HTML {@link Element}.
+     *
+     * @param element The HTML {@link Element} containing the title bar
+     * @return A {@link GameTitleBar} instance
+     */
     public static GameTitleBar fromElement(Element element) {
         String name = element.select(".gameName").first().text();
         String date = element.select(".gameDate").first().text();

@@ -11,16 +11,34 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+/**
+ * Representation of a list of <em>webDiplomacy</em> games from the {@code gamelistings.php} page.
+ */
 @AutoValue
 public abstract class GameListingsPage {
     public abstract ImmutableMap<Integer, GamePanel> getGamePanels();
 
+    /**
+     * Load a list of games for the current user, as represented by {@code cookies}.
+     *
+     * <p>Makes an authenticated HTTP request to http://webdiplomacy.net/gamelistings.php?gamelistType=My%20games.
+     *
+     * @param cookies The map of HTTP cookies that authenticate a given user
+     * @return A {@link GameListingsPage} instance
+     * @throws IOException if there is an error downloading the game listing data from the Internet
+     */
     public static GameListingsPage load(Map<String, String> cookies) throws IOException {
         return fromDocument(Jsoup.connect("http://webdiplomacy.net/gamelistings.php?gamelistType=My%20games")
                 .cookies(cookies)
                 .get());
     }
 
+    /**
+     * Extract a {@link GameListingsPage} from an HTML {@link Document}.
+     *
+     * @param document The HTML {@link Document} containing the game listings
+     * @return A {@link GameListingsPage} instance
+     */
     public static GameListingsPage fromDocument(Document document) {
         Elements games = document.select(".gamesList .gamePanel");
         return new AutoValue_GameListingsPage(games.stream()
