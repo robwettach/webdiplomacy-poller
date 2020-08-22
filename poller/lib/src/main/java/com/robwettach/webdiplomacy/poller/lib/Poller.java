@@ -23,22 +23,36 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Main entrypoint for webDiplomacy Poller applications.
+ */
 public class Poller {
     private final int gameId;
     private final HistoryStore history;
     private final GameNotifications notifications;
 
+    /**
+     * Create a {@link Poller} for a given game.
+     *
+     * @param gameId The ID of the game to poll
+     * @param history The {@link HistoryStore} to store and retrieve history to/from
+     * @param notifier The {@link Notifier} to send notifications to
+     */
     public Poller(int gameId, HistoryStore history, Notifier notifier) {
         this.gameId = gameId;
         this.history = history;
         this.notifications = new GameNotifications(gameId, notifier);
+        prepare();
     }
 
-    public void prepare() {
+    private void prepare() {
         List<Snapshot> snapshots = history.getSnapshotsForGame(gameId);
         snapshots.stream().map(Snapshot::getState).forEach(notifications::updateSilently);
     }
 
+    /**
+     * Poll the current status of a <em>webDiplomacy</em> game, send notifications, and update the history.
+     */
     public void poll() {
         GameBoardPage page;
         try {

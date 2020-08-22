@@ -6,6 +6,9 @@ import com.google.auto.value.AutoValue;
 import com.robwettach.webdiplomacy.model.GameState;
 import java.time.ZonedDateTime;
 
+/**
+ * Representation of the state of a <em>webDiplomacy</em> game at a certain moment in time.
+ */
 @AutoValue
 public abstract class Snapshot {
     public abstract ZonedDateTime getTime();

@@ -42,7 +42,6 @@ public class Main {
 
         Notifier notifier = getNotifier();
         Poller poller = new Poller(gameId, history, notifier);
-        poller.prepare();
 
         ScheduledExecutorService schedule = Executors.newSingleThreadScheduledExecutor();
 

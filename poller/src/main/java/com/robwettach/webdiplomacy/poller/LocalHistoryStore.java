@@ -127,8 +127,8 @@ public class LocalHistoryStore implements HistoryStore {
     }
 
     @Override
-    public Optional<Snapshot> getLatestSnapshotForGame(int id) {
-        List<Snapshot> gameSnapshots = getSnapshotsForGame(id);
+    public Optional<Snapshot> getLatestSnapshotForGame(int gameId) {
+        List<Snapshot> gameSnapshots = getSnapshotsForGame(gameId);
         return Optional.ofNullable(Iterables.getLast(gameSnapshots, null));
     }
 
