@@ -10,4 +10,9 @@ allprojects {
         // webdiplomacy-model, webdiplomacy-poller-lib
         archivesBaseName = "webdiplomacy${project.path.replace(":", "-")}"
     }
+
+    tasks.withType(JavaCompile) {
+        // Enable Jackson's `ParameterNamesModule` to avoid using `@JsonProperty("name")` syntax
+        options.compilerArgs += '-parameters'
+    }
 }

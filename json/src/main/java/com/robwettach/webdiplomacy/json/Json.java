@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.model;
+package com.robwettach.webdiplomacy.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

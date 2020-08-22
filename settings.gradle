@@ -1,4 +1,5 @@
 rootProject.name = 'webdiplomacy-poller'
+include 'json'
 include 'model'
 include 'notify'
 include 'page'

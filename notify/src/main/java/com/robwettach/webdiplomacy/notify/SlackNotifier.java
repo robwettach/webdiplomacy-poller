@@ -1,6 +1,6 @@
 package com.robwettach.webdiplomacy.notify;
 
-import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
+import static com.robwettach.webdiplomacy.json.Json.OBJECT_MAPPER;
 import static java.util.stream.Collectors.joining;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

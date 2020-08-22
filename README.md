@@ -24,16 +24,17 @@ to build and run in your terminal.  Some helpful Gradle tasks:
   you can run the executable directly from here
 
 ### Design
-There are (currently) five different Gradle projects:
+There are (currently) six different Gradle projects:
+* `json` - Provides specially-configured [Jackson](https://github.com/FasterXML/jackson) `ObjectMapper` to be used
+  throughout the project for consistency.
 * `model` - [Google AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)-based model classes
-  and [Jackson](https://github.com/FasterXML/jackson) JSON serialization/deserialization to represent the current state
-  of a *webDiplomacy* game
+  to represent the current state of a *webDiplomacy* game
 * `page` - [JSoup](https://jsoup.org/)-based logic to parse a
   page from https://webDiplomacy.net into the `model` classes
 * `notify` - Logic to detect changes between subsequent game states and send notifications.  Currently supports multiple
   state transitions (defeated, 1-hour remaining, messages, orders, paused, phase change, votes) and sending
   notifications to `stdout` and Slack
-* `poller-lib` - Library that ties together the logic for polling a single webDiplomacy game, exposing interfaces to
+* `poller-lib` - Library that ties together the logic for polling a single *webDiplomacy* game, exposing interfaces to
    allow clients to control how game history is stored and how notifications are sent
 * `poller` - Top-level CLI application.  Configures storage of state to local disk and orchestrates polling
   https://webDiplomacy.net every 2 minutes via the `poller-lib` library

@@ -2,7 +2,7 @@ package com.robwettach.webdiplomacy.poller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
-import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
+import static com.robwettach.webdiplomacy.json.Json.OBJECT_MAPPER;
 import static java.lang.String.format;
 
 import com.fasterxml.jackson.core.type.TypeReference;
