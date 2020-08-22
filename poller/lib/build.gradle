@@ -1,10 +1,5 @@
 plugins {
-    id 'application'
-}
-
-application {
-    applicationName = 'webdiplomacy-poller'
-    mainClassName = 'com.robwettach.webdiplomacy.poller.Main'
+    id 'java-library'
 }
 
 tasks.withType(JavaCompile) {
@@ -13,8 +8,11 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    implementation project(':poller:lib')
+    api project(':model')
+    api project(':notify')
+    implementation project(':page')
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    implementation group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
     implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
     annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
 }

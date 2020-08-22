@@ -6,6 +6,8 @@ allprojects {
     version '0.1'
 
     tasks.withType(Jar) {
-        archivesBaseName = "webdiplomacy-$project.name"
+        // Allow for sub-projects like :model and :poller:lib to have the archive names:
+        // webdiplomacy-model, webdiplomacy-poller-lib
+        archivesBaseName = "webdiplomacy${project.path.replace(":", "-")}"
     }
 }

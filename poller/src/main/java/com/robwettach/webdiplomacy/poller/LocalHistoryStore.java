@@ -2,13 +2,14 @@ package com.robwettach.webdiplomacy.poller;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
 import static java.lang.String.format;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.robwettach.webdiplomacy.poller.lib.HistoryStore;
+import com.robwettach.webdiplomacy.poller.lib.Snapshot;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,10 +38,10 @@ public class LocalHistoryStore implements HistoryStore {
         checkNotNull(configDirPath, "configDirPath must not be null");
         this.configDirPath = configDirPath;
         this.snapshotsPath = configDirPath.resolve(LEGACY_SNAPSHOTS_FILE_NAME);
+        load();
     }
 
-    @Override
-    public void load() {
+    private void load() {
         loadLegacySnapshots();
         try {
             Files.list(configDirPath)
@@ -109,11 +110,6 @@ public class LocalHistoryStore implements HistoryStore {
     }
 
     @Override
-    public ImmutableList<Integer> getGameIds() {
-        return snapshots.keySet().stream().sorted().collect(toImmutableList());
-    }
-
-    @Override
     public ImmutableList<Snapshot> getSnapshotsForGame(int gameId) {
         return ImmutableList.copyOf(snapshots.getOrDefault(gameId, new ArrayList<>()));
     }
@@ -128,10 +124,10 @@ public class LocalHistoryStore implements HistoryStore {
     public void addSnapshot(int gameId, Snapshot snapshot) {
         List<Snapshot> gameSnapshots = snapshots.computeIfAbsent(gameId, (x) -> new ArrayList<>());
         gameSnapshots.add(snapshot);
+        save();
     }
 
-    @Override
-    public void save() {
+    private void save() {
         snapshots.forEach((gameId, gameSnapshots) -> {
             Path path = configDirPath.resolve(format(GAME_SNAPSHOTS_FORMAT, gameId));
             try {

@@ -7,6 +7,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toMap;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.robwettach.webdiplomacy.poller.lib.CookieProvider;
 import java.io.Console;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.poller;
+package com.robwettach.webdiplomacy.poller.lib;
 
 import java.util.Map;
 

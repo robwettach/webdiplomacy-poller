@@ -3,4 +3,4 @@ include 'model'
 include 'notify'
 include 'page'
 include 'poller'
-
+include 'poller:lib'
