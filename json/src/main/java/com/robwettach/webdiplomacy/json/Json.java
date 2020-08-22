@@ -8,7 +8,13 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
+/**
+ * Wrapper class to hold the common {@link ObjectMapper} instance for <em>webDiplomacy</em>.
+ */
 public class Json {
+    /**
+     * Common {@link ObjectMapper} instance to be used to serialized/deserialize JSON within <em>webDiplomacy</em>.
+     */
     public static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .addModule(new Jdk8Module())
