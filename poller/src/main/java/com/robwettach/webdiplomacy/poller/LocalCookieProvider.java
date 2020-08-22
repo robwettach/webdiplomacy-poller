@@ -23,6 +23,14 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * {@link CookieProvider} that manages cookies on local disk.
+ *
+ * <p>On first run, asks for a username and password that it immediately exchanges for cookies from
+ * <a href="https://webDiplomacy.net">webDiplomacy.net</a>.  Cookies are stored to local disk and read on future runs.
+ *
+ * <p>Writes cookies to {@code WEBDIP_POLLER_HOME/cookies.json}.
+ */
 public class LocalCookieProvider implements CookieProvider {
     private static final String COOKIES_FILE_NAME = "cookies.json";
 

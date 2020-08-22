@@ -20,11 +20,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Main entry point for the webDiplomacy Poller local CLI application.
+ */
 public class Main {
 
     public static final String ENV_SLACK_WEBHOOK_URL = "SLACK_WEBHOOK_URL";
     public static final String ENV_WEBDIP_POLLER_HOME = "WEBDIP_POLLER_HOME";
 
+    /**
+     * Main entry point for the webDiplomacy Poller local CLI application.
+     *
+     * @param args Command line arguments.  Expected to have one element: the game ID to poll
+     */
     public static void main(String... args) throws InterruptedException {
         checkArgument(args.length == 1, "Must provide a game ID");
         int gameId = Integer.parseInt(args[0]);

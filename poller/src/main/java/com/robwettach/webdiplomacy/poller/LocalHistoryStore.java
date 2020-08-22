@@ -21,6 +21,11 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * {@link HistoryStore} that manages history on local disk.
+ *
+ * <p>Writes per-game history to {@code WEBDIP_POLLER_HOME/$gameId-snapshots.json}.
+ */
 public class LocalHistoryStore implements HistoryStore {
     private static final String GAME_SNAPSHOTS_FORMAT = "%d-snapshots.json";
     private static final String GAME_ID_KEY = "gameId";
@@ -34,6 +39,13 @@ public class LocalHistoryStore implements HistoryStore {
 
     private Map<Integer, List<Snapshot>> snapshots = new HashMap<>();
 
+    /**
+     * Create a {@link LocalHistoryStore} instance rooted at {@code configDirPath}.
+     *
+     * <p>Synchronously loads all {@code $gameId-snapshots.json} files found at {@code configDirPath}.
+     *
+     * @param configDirPath The root {@code WEBDIP_POLLER_HOME} directory
+     */
     public LocalHistoryStore(Path configDirPath) {
         checkNotNull(configDirPath, "configDirPath must not be null");
         this.configDirPath = configDirPath;
