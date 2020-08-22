@@ -1,39 +1,41 @@
 package com.robwettach.webdiplomacy.page;
 
-import com.robwettach.webdiplomacy.model.GameDate;
-import com.robwettach.webdiplomacy.model.GamePhase;
-import com.robwettach.webdiplomacy.model.GameState;
-import org.jsoup.nodes.Element;
-
+import com.google.auto.value.AutoValue;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Optional;
+import org.jsoup.nodes.Element;
 
-public class GameTitleBar {
-    private final Element titleBar;
+@AutoValue
+public abstract class GameTitleBar {
+    public abstract String getName();
+    public abstract String getDate();
+    public abstract String getPhase();
+    public abstract boolean isPaused();
+    public abstract Optional<ZonedDateTime> getNextTurnAt();
 
-    public GameTitleBar(Element parentNode) {
-        this.titleBar = parentNode.select(".titleBar").first();
+    public static GameTitleBar fromParent(Element parent) {
+        return fromElement(parent.select(".titleBar").first());
     }
 
-    public GameState getGameGlobalState(int gameId) {
-        GameState.Builder gameBuilder = GameState.builder()
-                .id(gameId);
-        gameBuilder.name(titleBar.select(".gameName").first().text());
+    public static GameTitleBar fromElement(Element element) {
+        String name = element.select(".gameName").first().text();
+        String date = element.select(".gameDate").first().text();
+        String phase = element.select(".gamePhase").first().text();
 
-        gameBuilder.date(GameDate.parse(titleBar.select(".gameDate").first().text()));
-        GamePhase phase = GamePhase.fromString(titleBar.select(".gamePhase").first().text());
-        gameBuilder.phase(phase);
-        Element gameTimeRemaining = titleBar.select(".gameTimeRemaining").first();
+        boolean paused = false;
+        Optional<ZonedDateTime> nextTurnAt = Optional.empty();
+
+        Element gameTimeRemaining = element.select(".gameTimeRemaining").first();
         if (gameTimeRemaining.text().startsWith("Paused")) {
-            gameBuilder.paused(true);
+            paused = true;
         } else {
-            String next = titleBar.select("span.timeremaining").first().attr("unixtime");
-            gameBuilder.nextTurnAt(
-                    ZonedDateTime.ofInstant(
-                            Instant.ofEpochSecond(Long.parseLong(next)),
-                            ZoneOffset.UTC));
+            String next = element.select("span.timeremaining").first().attr("unixtime");
+            nextTurnAt = Optional.of(ZonedDateTime.ofInstant(
+                    Instant.ofEpochSecond(Long.parseLong(next)),
+                    ZoneOffset.UTC));
         }
-        return gameBuilder.build();
+        return new AutoValue_GameTitleBar(name, date, phase, paused, nextTurnAt);
     }
 }

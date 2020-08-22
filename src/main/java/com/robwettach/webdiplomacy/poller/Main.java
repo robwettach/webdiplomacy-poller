@@ -1,14 +1,27 @@
 package com.robwettach.webdiplomacy.poller;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
+import com.robwettach.webdiplomacy.model.CountryState;
+import com.robwettach.webdiplomacy.model.CountryStatus;
+import com.robwettach.webdiplomacy.model.GameDate;
+import com.robwettach.webdiplomacy.model.GamePhase;
 import com.robwettach.webdiplomacy.model.GameState;
+import com.robwettach.webdiplomacy.model.UserInfo;
+import com.robwettach.webdiplomacy.model.Vote;
 import com.robwettach.webdiplomacy.notify.CompositeNotifier;
 import com.robwettach.webdiplomacy.notify.GameNotifications;
 import com.robwettach.webdiplomacy.notify.Notifier;
 import com.robwettach.webdiplomacy.notify.SlackNotifier;
 import com.robwettach.webdiplomacy.notify.StdOutNotifier;
+import com.robwettach.webdiplomacy.page.CountryUserLink;
 import com.robwettach.webdiplomacy.page.GameBoardPage;
-
+import com.robwettach.webdiplomacy.page.GameTitleBar;
+import com.robwettach.webdiplomacy.page.MemberRow;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,8 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static com.google.common.base.Preconditions.checkArgument;
 
 public class Main {
 
@@ -111,14 +122,12 @@ public class Main {
             Notifier notifier) {
         GameBoardPage page;
         try {
-            page = new GameBoardPage(gameId);
+            page = GameBoardPage.loadGame(gameId);
         } catch (IOException e) {
-            System.err.println("Failed to load webDiplomacy game board page for game: " + gameId);
-            e.printStackTrace();
-            return;
+            throw new UncheckedIOException("Failed to load webDiplomacy game board page for game: " + gameId, e);
         }
 
-        GameState state = page.getGame();
+        GameState state = stateFromPage(gameId, page);
         System.out.print(".");
 
         ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
@@ -137,5 +146,44 @@ public class Main {
             history.addSnapshot(gameId, current);
             history.save();
         }
+    }
+
+    private static GameState stateFromPage(int gameId, GameBoardPage page) {
+        GameState.Builder builder = GameState.builder();
+
+        builder.id(gameId);
+        translateTitleBar(page.getTitleBar(), builder);
+        builder.countries(page.getMembersTable()
+                .stream()
+                .flatMap(t -> t.getRows().stream())
+                .map(Main::countryFromRow)
+                .collect(toList()));
+
+        return builder.build();
+    }
+
+    private static void translateTitleBar(GameTitleBar titleBar, GameState.Builder builder) {
+        builder.name(titleBar.getName());
+        builder.date(GameDate.parse(titleBar.getDate()));
+        builder.phase(GamePhase.fromString(titleBar.getPhase()));
+        builder.paused(titleBar.isPaused());
+        titleBar.getNextTurnAt().ifPresent(builder::nextTurnAt);
+    }
+
+    private static CountryState countryFromRow(MemberRow memberRow) {
+        CountryState.Builder builder = CountryState.builder();
+
+        builder.countryName(memberRow.getCountryName());
+        builder.user(userInfoFromLink(memberRow.getUser()));
+        builder.status(CountryStatus.fromString(memberRow.getStatus()));
+        builder.supplyCenterCount(memberRow.getSupplyCenterCount());
+        builder.unitCount(memberRow.getUnitCount());
+        builder.votes(memberRow.getVotes().stream().map(Vote::valueOf).collect(toSet()));
+
+        return builder.build();
+    }
+
+    private static UserInfo userInfoFromLink(CountryUserLink link) {
+        return UserInfo.create(link.getName(), link.getId());
     }
 }
