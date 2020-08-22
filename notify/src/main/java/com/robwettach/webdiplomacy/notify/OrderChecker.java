@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * {@link DiffChecker} that reports when a single country has not yet
+ * submitted orders or marked themselves as {@link CountryStatus#Ready}.
+ */
 public class OrderChecker implements DiffChecker {
     private Pair<DatePhase, String> singleCountryNotSubmitted = null;
     private Pair<DatePhase, String> singleCountryNotReady = null;

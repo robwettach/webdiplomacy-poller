@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * {@link Notifier} that sends notifications to a collection of other {@link Notifier}s.
+ */
 @AutoValue
 public abstract class CompositeNotifier implements Notifier {
     public abstract ImmutableList<Notifier> getNotifiers();

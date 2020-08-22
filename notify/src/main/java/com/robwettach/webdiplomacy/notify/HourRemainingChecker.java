@@ -7,6 +7,9 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * {@link DiffChecker} that reports when there is an hour or less remaining before the next turn.
+ */
 public class HourRemainingChecker implements DiffChecker {
     private DatePhase hourRemainingNotified = null;
 

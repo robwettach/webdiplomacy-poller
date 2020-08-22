@@ -15,10 +15,14 @@ import java.util.Map;
 import java.util.Set;
 import one.util.streamex.StreamEx;
 
+/**
+ * {@link DiffChecker} that reports when a country starts a vote or is the last remaining country to cast a vote.
+ */
 public class VoteChecker implements DiffChecker {
     private final Map<Vote, String> startingVotes = new HashMap<>();
     private final Map<Vote, String> lastRemainingVote = new HashMap<>();
 
+    @Override
     public List<Diff> check(GameState state) {
         List<Diff> diffs = new ArrayList<>();
         Map<Vote, Set<String>> votingCountries = StreamEx.of(state.getActiveCountries())

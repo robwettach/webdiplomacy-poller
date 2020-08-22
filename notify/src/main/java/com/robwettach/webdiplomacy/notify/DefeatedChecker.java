@@ -12,6 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * {@link DiffChecker} that reports when a country has been defeated.
+ */
 public class DefeatedChecker implements DiffChecker {
     private Set<String> defeatedCountries = new HashSet<>();
 

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+/**
+ * {@link Notifier} that sends notifications to standard output.
+ */
 public class StdOutNotifier implements Notifier {
     private StdOutNotifier() {
 

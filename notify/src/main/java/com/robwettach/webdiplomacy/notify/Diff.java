@@ -4,6 +4,9 @@ import static java.lang.String.format;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Simple representation of a state change in a <em>webDiplomacy</em> game.
+ */
 @AutoValue
 public abstract class Diff {
     public abstract String getMessage();

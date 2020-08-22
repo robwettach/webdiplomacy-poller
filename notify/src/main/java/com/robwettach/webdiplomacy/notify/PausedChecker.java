@@ -4,6 +4,9 @@ import com.robwettach.webdiplomacy.model.GameState;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * {@link DiffChecker} that reports when the game is paused or unpaused.
+ */
 public class PausedChecker implements DiffChecker {
     private boolean paused;
 

@@ -14,6 +14,10 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * {@link Notifier} that sends notifications to a Slack webhook, configured as per
+ * <a href="https://github.com/robwettach/webdiplomacy-poller#slack-integration">the README</a>.
+ */
 @AutoValue
 public abstract class SlackNotifier implements Notifier {
     private static final HttpClient CLIENT = HttpClient.newHttpClient();

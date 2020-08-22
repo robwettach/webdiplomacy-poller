@@ -2,6 +2,12 @@ package com.robwettach.webdiplomacy.notify;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Simple two-element tuple.
+ *
+ * @param <LeftT> The type of the {@link #getLeft() left} element
+ * @param <RightT> The type of the {@link #getRight() right} element
+ */
 @AutoValue
 public abstract class Pair<LeftT, RightT> {
     public abstract LeftT getLeft();

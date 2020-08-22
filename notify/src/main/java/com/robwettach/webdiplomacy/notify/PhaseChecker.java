@@ -5,6 +5,9 @@ import com.robwettach.webdiplomacy.model.GameState;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * {@link DiffChecker} that reports when the game proceeds to a new phase.
+ */
 public class PhaseChecker implements DiffChecker {
     private DatePhase currentPhase = null;
 
