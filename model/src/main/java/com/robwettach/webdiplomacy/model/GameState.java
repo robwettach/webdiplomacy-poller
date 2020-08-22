@@ -58,7 +58,7 @@ public abstract class GameState {
     }
 
     @AutoValue.Builder
-    public static abstract class Builder {
+    public abstract static class Builder {
         @JsonCreator
         public static Builder builder() {
             return new AutoValue_GameState.Builder()

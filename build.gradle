@@ -1,4 +1,10 @@
 allprojects {
+    apply plugin: 'checkstyle'
+
+    checkstyle {
+        toolVersion = '8.35'
+    }
+
     repositories {
         mavenCentral()
     }
