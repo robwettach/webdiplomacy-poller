@@ -1,21 +1,19 @@
 package com.robwettach.webdiplomacy.notify;
 
+import static java.util.stream.Collectors.toSet;
+
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.robwettach.webdiplomacy.model.CountryState;
-import com.robwettach.webdiplomacy.model.CountryStatus;
 import com.robwettach.webdiplomacy.model.GameState;
 import com.robwettach.webdiplomacy.model.Vote;
-import one.util.streamex.StreamEx;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static java.util.stream.Collectors.toSet;
+import one.util.streamex.StreamEx;
 
 public class VoteChecker implements DiffChecker {
     private final Map<Vote, String> startingVotes = new HashMap<>();

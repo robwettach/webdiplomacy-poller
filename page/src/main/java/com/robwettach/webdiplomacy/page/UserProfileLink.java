@@ -1,13 +1,12 @@
 package com.robwettach.webdiplomacy.page;
 
-import com.google.auto.value.AutoValue;
-import org.jsoup.nodes.Element;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static com.google.common.base.Verify.verify;
 import static java.lang.String.format;
+
+import com.google.auto.value.AutoValue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.jsoup.nodes.Element;
 
 @AutoValue
 public abstract class UserProfileLink {

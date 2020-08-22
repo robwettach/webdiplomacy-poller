@@ -1,15 +1,14 @@
 package com.robwettach.webdiplomacy.model;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
-
 import java.util.Collections;
 import java.util.Set;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
 
 @AutoValue
 @JsonDeserialize(builder = CountryState.Builder.class)

@@ -2,7 +2,6 @@ package com.robwettach.webdiplomacy.notify;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;

@@ -1,9 +1,11 @@
 package com.robwettach.webdiplomacy.notify;
 
+import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
+import static java.util.stream.Collectors.joining;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -11,9 +13,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
-
-import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
-import static java.util.stream.Collectors.joining;
 
 @AutoValue
 public abstract class SlackNotifier implements Notifier {

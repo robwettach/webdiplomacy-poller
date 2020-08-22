@@ -1,18 +1,16 @@
 package com.robwettach.webdiplomacy.notify;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
+
 import com.google.common.collect.Sets;
 import com.robwettach.webdiplomacy.model.CountryState;
 import com.robwettach.webdiplomacy.model.CountryStatus;
 import com.robwettach.webdiplomacy.model.GameState;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toSet;
 
 public class DefeatedChecker implements DiffChecker {
     private Set<String> defeatedCountries = new HashSet<>();

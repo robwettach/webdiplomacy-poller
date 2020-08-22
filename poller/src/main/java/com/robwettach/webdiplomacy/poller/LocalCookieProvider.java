@@ -1,7 +1,12 @@
 package com.robwettach.webdiplomacy.poller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Verify.verifyNotNull;
+import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toMap;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import java.io.Console;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -16,12 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Verify.verifyNotNull;
-import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.toMap;
 
 public class LocalCookieProvider implements CookieProvider {
     private static final String COOKIES_FILE_NAME = "cookies.json";

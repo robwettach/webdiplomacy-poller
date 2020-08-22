@@ -1,8 +1,8 @@
 package com.robwettach.webdiplomacy.model;
 
-import com.google.auto.value.AutoValue;
-
 import static java.lang.String.format;
+
+import com.google.auto.value.AutoValue;
 
 @AutoValue
 public abstract class DatePhase {

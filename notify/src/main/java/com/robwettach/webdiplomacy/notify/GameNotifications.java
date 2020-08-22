@@ -1,11 +1,10 @@
 package com.robwettach.webdiplomacy.notify;
 
+import static java.util.stream.Collectors.toList;
+
 import com.google.common.collect.ImmutableList;
 import com.robwettach.webdiplomacy.model.GameState;
-
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 public class GameNotifications {
 

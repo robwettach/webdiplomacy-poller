@@ -1,9 +1,14 @@
 package com.robwettach.webdiplomacy.poller;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Verify.verify;
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
+import static java.lang.String.format;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,12 +19,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Verify.verify;
-import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.robwettach.webdiplomacy.model.Json.OBJECT_MAPPER;
-import static java.lang.String.format;
 
 public class LocalHistoryStore implements HistoryStore {
     private static final String GAME_SNAPSHOTS_FORMAT = "%d-snapshots.json";

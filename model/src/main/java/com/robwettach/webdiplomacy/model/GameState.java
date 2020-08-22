@@ -1,22 +1,20 @@
 package com.robwettach.webdiplomacy.model;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static java.lang.String.format;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.joining;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
-
-import javax.annotation.Nullable;
 import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Predicate;
-
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static java.lang.String.format;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.joining;
+import javax.annotation.Nullable;
 
 @AutoValue
 @JsonDeserialize(builder = GameState.Builder.class)

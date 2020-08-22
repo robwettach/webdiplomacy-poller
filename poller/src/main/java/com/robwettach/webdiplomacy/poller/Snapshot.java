@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.auto.value.AutoValue;
 import com.robwettach.webdiplomacy.model.GameState;
-
 import java.time.ZonedDateTime;
 
 @AutoValue

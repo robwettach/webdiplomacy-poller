@@ -2,7 +2,6 @@ package com.robwettach.webdiplomacy.notify;
 
 import com.robwettach.webdiplomacy.model.DatePhase;
 import com.robwettach.webdiplomacy.model.GameState;
-
 import java.util.Collections;
 import java.util.List;
 

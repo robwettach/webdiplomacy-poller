@@ -1,16 +1,15 @@
 package com.robwettach.webdiplomacy.notify;
 
+import static java.util.stream.Collectors.toList;
+
 import com.google.common.collect.ImmutableSet;
 import com.robwettach.webdiplomacy.model.CountryState;
 import com.robwettach.webdiplomacy.model.CountryStatus;
 import com.robwettach.webdiplomacy.model.DatePhase;
 import com.robwettach.webdiplomacy.model.GameState;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import static java.util.stream.Collectors.toList;
 
 public class OrderChecker implements DiffChecker {
     private Pair<DatePhase, String> singleCountryNotSubmitted = null;
