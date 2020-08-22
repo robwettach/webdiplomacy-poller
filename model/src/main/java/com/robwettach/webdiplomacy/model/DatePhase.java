@@ -4,6 +4,9 @@ import static java.lang.String.format;
 
 import com.google.auto.value.AutoValue;
 
+/**
+ * Representation of a game's date and phase combination, e.g. "Spring, 1901, Diplomacy".
+ */
 @AutoValue
 public abstract class DatePhase {
     public abstract GameDate getDate();

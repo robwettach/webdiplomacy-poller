@@ -16,6 +16,9 @@ import java.util.Collection;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
+/**
+ * Representation of the current state of a <em>webDiplomacy</em> game.
+ */
 @AutoValue
 @JsonDeserialize(builder = GameState.Builder.class)
 public abstract class GameState {
@@ -27,6 +30,11 @@ public abstract class GameState {
     public abstract Optional<ZonedDateTime> getNextTurnAt();
     public abstract ImmutableSet<CountryState> getCountries();
 
+    /**
+     * Get the set of all countries that are not {@link CountryStatus#Defeated Defeated}.
+     *
+     * @return The countries that are not {@link CountryStatus#Defeated Defeated}
+     */
     @JsonIgnore
     public ImmutableSet<CountryState> getActiveCountries() {
         return getCountries()
@@ -57,6 +65,9 @@ public abstract class GameState {
                 getCountries().stream().map(CountryState::toString).collect(joining("\n")));
     }
 
+    /**
+     * Builder class for {@link GameState}.
+     */
     @AutoValue.Builder
     public abstract static class Builder {
         @JsonCreator

@@ -10,6 +10,9 @@ import com.google.auto.value.AutoValue;
 import java.util.Collections;
 import java.util.Set;
 
+/**
+ * Representation of the current state of a country.
+ */
 @AutoValue
 @JsonDeserialize(builder = CountryState.Builder.class)
 public abstract class CountryState {
@@ -22,6 +25,10 @@ public abstract class CountryState {
     public abstract int getUnitCount();
     public abstract Set<Vote> getVotes();
 
+    /**
+     * Get a new {@link Builder} instance.
+     * @return The new {@link Builder}
+     */
     public static Builder builder() {
         return Builder.builder()
                 .currentUser(false)
@@ -42,13 +49,14 @@ public abstract class CountryState {
                 getVotes().isEmpty() ? "" : "Votes: " + getVotes().stream().map(Vote::toString).collect(joining(", ")));
     }
 
+    /**
+     * Builder class for {@link CountryState}.
+     */
     @AutoValue.Builder
     public interface Builder {
         @JsonCreator
         static CountryState.Builder builder() {
             return new AutoValue_CountryState.Builder()
-                    .supplyCenterCount(0)
-                    .unitCount(0)
                     .votes(Collections.emptySet());
         }
 

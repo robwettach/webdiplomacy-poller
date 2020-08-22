@@ -9,6 +9,9 @@ import com.google.auto.value.AutoValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Representation of a game date, e.g. "Spring, 1901".
+ */
 @AutoValue
 public abstract class GameDate {
     private static final Pattern DATE_PATTERN = Pattern.compile("(?<season>\\w+), (?<year>\\d+)");
@@ -25,6 +28,14 @@ public abstract class GameDate {
         return format("%s, %4d", getSeason(), getYear());
     }
 
+    /**
+     * Parse a date string into a {@link GameDate} instance.
+     *
+     * @param date The string representation of the date to parse
+     * @return The parsed {@link GameDate} instance
+     * @throws NullPointerException if {@code date} is null
+     * @throws IllegalArgumentException if {@code date} does not match the pattern /\w+, \d+/
+     */
     public static GameDate parse(String date) {
         checkNotNull(date);
         Matcher matcher = DATE_PATTERN.matcher(date);
