@@ -19,13 +19,12 @@ to build and run in your terminal.  Some helpful Gradle tasks:
 * `build` - will build the code (and run non-existent unit tests?)
 * `run` - will run the app within the context of Gradle.
   This doesn't support receiving username/password from the command line
-* `assembleDist` - Zips and Tars up the build artifacts and dependencies in `build/distributions`
-* `installDist` - Installs the distribution to `build/install/webdiplomacy-poller` -
+* `assembleDist` - Zips and Tars up the build artifacts and dependencies in `poller/build/distributions`
+* `installDist` - Installs the distribution to `poller/build/install/webdiplomacy-poller` -
   you can run the executable directly from here
 
 ### Design
-There are (currently) four different Java sub-packages.  I'd be interested in splitting these into separate Gradle
-modules, as ideally they're logically separate.
+There are (currently) four different Gradle projects:
 * `model` - [Google AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)-based model classes
   and [Jackson](https://github.com/FasterXML/jackson) JSON serialization/deserialization to represent the current state
   of a *webDiplomacy* game

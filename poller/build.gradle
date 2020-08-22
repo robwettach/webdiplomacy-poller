@@ -1,0 +1,23 @@
+plugins {
+    id 'application'
+}
+
+application {
+    applicationName = 'webdiplomacy-poller'
+    mainClassName = 'com.robwettach.webdiplomacy.poller.Main'
+}
+
+tasks.withType(JavaCompile) {
+    // Enable Jackson's `ParameterNamesModule` to avoid using `@JsonProperty("name")` syntax
+    options.compilerArgs += '-parameters'
+}
+
+dependencies {
+    implementation project(':model')
+    implementation project(':notify')
+    implementation project(':page')
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    implementation group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
+    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+}

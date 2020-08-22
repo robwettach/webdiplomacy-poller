@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    api group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
+    api group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    implementation project(':model')
+    implementation group: 'one.util', name: 'streamex', version: '0.7.3'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+}

@@ -1,0 +1,18 @@
+plugins {
+    id 'java-library'
+}
+
+tasks.withType(JavaCompile) {
+    // Enable Jackson's `ParameterNamesModule` to avoid using `@JsonProperty("name")` syntax
+    options.compilerArgs += '-parameters'
+}
+
+dependencies {
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.2'
+    api group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
+    api group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jdk8', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.11.2'
+    implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-parameter-names', version: '2.11.2'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+}
