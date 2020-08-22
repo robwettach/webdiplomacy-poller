@@ -25,12 +25,11 @@ to build and run in your terminal.  Some helpful Gradle tasks:
 
 ### Design
 There are (currently) six different Gradle projects:
-* `json` - Provides specially-configured [Jackson](https://github.com/FasterXML/jackson) `ObjectMapper` to be used
+* `json` - Provides a specially-configured [Jackson](https://github.com/FasterXML/jackson) `ObjectMapper` to be used
   throughout the project for consistency.
 * `model` - [Google AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)-based model classes
   to represent the current state of a *webDiplomacy* game
-* `page` - [JSoup](https://jsoup.org/)-based logic to parse a
-  page from https://webDiplomacy.net into the `model` classes
+* `page` - [JSoup](https://jsoup.org/)-based logic to parse a pages from https://webDiplomacy.net
 * `notify` - Logic to detect changes between subsequent game states and send notifications.  Currently supports multiple
   state transitions (defeated, 1-hour remaining, messages, orders, paused, phase change, votes) and sending
   notifications to `stdout` and Slack
