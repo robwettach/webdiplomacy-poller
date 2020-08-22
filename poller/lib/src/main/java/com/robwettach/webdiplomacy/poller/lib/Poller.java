@@ -79,38 +79,34 @@ public class Poller {
     }
 
     private static GameState stateFromPage(int gameId, GameBoardPage page) {
-        GameState.Builder builder = GameState.builder();
+        GameState.Builder builder = GameState.builder()
+                .id(gameId);
 
-        builder.id(gameId);
-        translateTitleBar(page.getTitleBar(), builder);
+        GameTitleBar titleBar = page.getTitleBar();
+        builder.name(titleBar.getName())
+                .date(GameDate.parse(titleBar.getDate()))
+                .phase(GamePhase.fromString(titleBar.getPhase()))
+                .paused(titleBar.isPaused())
+                .nextTurnAt(titleBar.getNextTurnAt().orElse(null));
+
         builder.countries(page.getMembersTable()
-                                  .stream()
-                                  .flatMap(t -> t.getRows().stream())
-                                  .map(Poller::countryFromRow)
-                                  .collect(toList()));
+                .stream()
+                .flatMap(t -> t.getRows().stream())
+                .map(Poller::countryFromRow)
+                .collect(toList()));
 
         return builder.build();
-    }
-
-    private static void translateTitleBar(GameTitleBar titleBar, GameState.Builder builder) {
-        builder.name(titleBar.getName());
-        builder.date(GameDate.parse(titleBar.getDate()));
-        builder.phase(GamePhase.fromString(titleBar.getPhase()));
-        builder.paused(titleBar.isPaused());
-        titleBar.getNextTurnAt().ifPresent(builder::nextTurnAt);
     }
 
     private static CountryState countryFromRow(MemberRow memberRow) {
-        CountryState.Builder builder = CountryState.builder();
-
-        builder.countryName(memberRow.getCountryName());
-        builder.user(userInfoFromLink(memberRow.getUser()));
-        builder.status(CountryStatus.fromString(memberRow.getStatus()));
-        builder.supplyCenterCount(memberRow.getSupplyCenterCount());
-        builder.unitCount(memberRow.getUnitCount());
-        builder.votes(memberRow.getVotes().stream().map(Vote::valueOf).collect(toSet()));
-
-        return builder.build();
+        return CountryState.builder()
+                .countryName(memberRow.getCountryName())
+                .user(userInfoFromLink(memberRow.getUser()))
+                .status(CountryStatus.fromString(memberRow.getStatus()))
+                .supplyCenterCount(memberRow.getSupplyCenterCount())
+                .unitCount(memberRow.getUnitCount())
+                .votes(memberRow.getVotes().stream().map(Vote::valueOf).collect(toSet()))
+                .build();
     }
 
     private static UserInfo userInfoFromLink(CountryUserLink link) {
