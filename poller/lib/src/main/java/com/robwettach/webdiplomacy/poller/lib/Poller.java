@@ -41,7 +41,7 @@ public class Poller {
     public Poller(int gameId, HistoryStore history, Notifier notifier) {
         this.gameId = gameId;
         this.history = history;
-        this.notifications = new GameNotifications(gameId, notifier);
+        this.notifications = new GameNotifications(notifier);
         prepare();
     }
 

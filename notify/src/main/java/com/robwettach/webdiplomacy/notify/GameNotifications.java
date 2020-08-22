@@ -20,8 +20,6 @@ import java.util.List;
  * </ul>
  */
 public class GameNotifications {
-
-    private final int gameId;
     private final Notifier notifier;
 
     private final List<DiffChecker> checkers = ImmutableList.of(
@@ -32,13 +30,8 @@ public class GameNotifications {
             new DefeatedChecker(),
             new VoteChecker());
 
-    public GameNotifications(int gameId, Notifier notifier) {
-        this.gameId = gameId;
+    public GameNotifications(Notifier notifier) {
         this.notifier = notifier;
-    }
-
-    public int getGameId() {
-        return gameId;
     }
 
     /**
