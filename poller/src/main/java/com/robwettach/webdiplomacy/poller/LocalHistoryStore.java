@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * {@link HistoryStore} that manages history on local disk.
@@ -27,6 +29,8 @@ import java.util.regex.Pattern;
  * <p>Writes per-game history to {@code WEBDIP_POLLER_HOME/$gameId-snapshots.json}.
  */
 public class LocalHistoryStore implements HistoryStore {
+    private static final Logger LOG = LogManager.getLogger(LocalHistoryStore.class);
+
     private static final String GAME_SNAPSHOTS_FORMAT = "%d-snapshots.json";
     private static final String GAME_ID_KEY = "gameId";
     private static final Pattern GAME_SNAPSHOTS_PATTERN = Pattern.compile(format(
@@ -71,39 +75,35 @@ public class LocalHistoryStore implements HistoryStore {
                                     path.toFile(),
                                     new TypeReference<>() {});
                         } catch (IOException e) {
-                            System.err.println("Failed to read JSON from: " + path);
-                            e.printStackTrace();
+                            LOG.error("Failed to read JSON from: {}", path, e);
                         }
                         snapshots.put(gameId, gameSnapshots);
-                        System.out.printf(
-                                "Loaded %d snapshots from game %d from: %s%n",
+                        LOG.info(
+                                "Loaded {} snapshots for game {} from: {}",
                                 gameSnapshots.size(),
                                 gameId,
                                 path);
                     });
         } catch (IOException e) {
-            System.err.println("Failed to list files in: " + configDirPath);
-            e.printStackTrace();
+            LOG.error("Failed to list files in: {}", configDirPath, e);
         }
-
     }
 
     private void loadLegacySnapshots() {
         verify(snapshots.isEmpty(), "Cannot load legacy snapshots after initializing");
         if (Files.exists(snapshotsPath)) {
-            System.out.println("Found legacy snapshots file: " + snapshotsPath);
+            LOG.info("Found legacy snapshots file: {}", snapshotsPath);
             try {
                 // Make a known-mutable copy
                 snapshots = new HashMap<>(OBJECT_MAPPER.readValue(
                         snapshotsPath.toFile(),
                         new TypeReference<>() {}));
             } catch (IOException e) {
-                System.err.println("Failed to read JSON from: " + snapshotsPath);
-                e.printStackTrace();
+                LOG.error("Failed to read JSON from: {}", snapshotsPath, e);
             }
             int snapshotCount = snapshots.values().stream().mapToInt(List::size).sum();
-            System.out.printf(
-                    "Loaded %d snapshots from %d games from: %s%n",
+            LOG.info(
+                    "Loaded {} snapshots from {} games from: {}",
                     snapshotCount,
                     snapshots.size(),
                     snapshotsPath);
@@ -113,10 +113,9 @@ public class LocalHistoryStore implements HistoryStore {
             // Delete the legacy file
             try {
                 Files.deleteIfExists(snapshotsPath);
-                System.out.printf("Deleted legacy snapshots file: %s%n", snapshotsPath);
+                LOG.info("Deleted legacy snapshots file: {}", snapshotsPath);
             } catch (IOException e) {
-                System.err.println("Failed to delete legacy snapshots file: " + snapshotsPath);
-                e.printStackTrace();
+                LOG.error("Failed to delete legacy snapshots file: {}", snapshotsPath, e);
             }
         }
     }
@@ -144,14 +143,13 @@ public class LocalHistoryStore implements HistoryStore {
             Path path = configDirPath.resolve(format(GAME_SNAPSHOTS_FORMAT, gameId));
             try {
                 OBJECT_MAPPER.writeValue(path.toFile(), gameSnapshots);
-                System.out.printf(
-                        "Saved %d snapshots from game %d to: %s%n",
+                LOG.info(
+                        "Saved {} snapshots for game {} to: {}",
                         gameSnapshots.size(),
                         gameId,
                         path);
             } catch (IOException e) {
-                System.err.println("Failed to write snapshots to: " + path);
-                e.printStackTrace();
+                LOG.error("Failed to write snapshots to: {}", path, e);
             }
         });
     }

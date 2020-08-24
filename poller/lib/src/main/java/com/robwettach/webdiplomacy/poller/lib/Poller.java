@@ -10,6 +10,7 @@ import com.robwettach.webdiplomacy.model.GamePhase;
 import com.robwettach.webdiplomacy.model.GameState;
 import com.robwettach.webdiplomacy.model.UserInfo;
 import com.robwettach.webdiplomacy.model.Vote;
+import com.robwettach.webdiplomacy.notify.Diff;
 import com.robwettach.webdiplomacy.notify.GameNotifications;
 import com.robwettach.webdiplomacy.notify.Notifier;
 import com.robwettach.webdiplomacy.page.CountryUserLink;
@@ -22,11 +23,15 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Main entrypoint for webDiplomacy Poller applications.
  */
 public class Poller {
+    private static final Logger LOG = LogManager.getLogger(Poller.class);
+
     private final int gameId;
     private final HistoryStore history;
     private final GameNotifications notifications;
@@ -48,12 +53,14 @@ public class Poller {
     private void prepare() {
         List<Snapshot> snapshots = history.getSnapshotsForGame(gameId);
         snapshots.stream().map(Snapshot::getState).forEach(notifications::updateSilently);
+        LOG.info("Prepared {} snapshots for game {}", snapshots.size(), gameId);
     }
 
     /**
      * Poll the current status of a <em>webDiplomacy</em> game, send notifications, and update the history.
      */
     public void poll() {
+        LOG.debug("Polling for changes to game {}", gameId);
         GameBoardPage page;
         try {
             page = GameBoardPage.loadGame(gameId);
@@ -62,12 +69,12 @@ public class Poller {
         }
 
         GameState state = stateFromPage(gameId, page);
-        System.out.print(".");
 
         ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
         Snapshot current = Snapshot.create(snapshotDate, state);
 
-        notifications.updateAndNotify(state);
+        List<Diff> diffs = notifications.updateAndNotify(state);
+        LOG.info("Found {} diffs at {} for game {}", diffs.size(), snapshotDate, gameId);
 
         // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
         // We track more pieces of state than we notify about (SC/unit count, etc), and we want to notify

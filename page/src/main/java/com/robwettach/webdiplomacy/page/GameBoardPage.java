@@ -5,6 +5,8 @@ import static java.lang.String.format;
 import com.google.auto.value.AutoValue;
 import java.io.IOException;
 import java.util.Optional;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -13,6 +15,8 @@ import org.jsoup.nodes.Document;
  */
 @AutoValue
 public abstract class GameBoardPage {
+    private static final Logger LOG = LogManager.getLogger(GameBoardPage.class);
+
     public abstract GameTitleBar getTitleBar();
     public abstract Optional<MembersTable> getMembersTable();
 
@@ -26,7 +30,9 @@ public abstract class GameBoardPage {
      * @throws IOException if there is an error downloading the game board data from the Internet
      */
     public static GameBoardPage loadGame(int gameId) throws IOException {
-        return fromDocument(Jsoup.connect(format("http://webdiplomacy.net/board.php?gameID=%d", gameId)).get());
+        String url = format("http://webdiplomacy.net/board.php?gameID=%d", gameId);
+        LOG.debug("Loading game from {}", url);
+        return fromDocument(Jsoup.connect(url).get());
     }
 
     /**

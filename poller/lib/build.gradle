@@ -12,7 +12,8 @@ dependencies {
     api project(':notify')
     implementation project(':json')
     implementation project(':page')
-    implementation group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
-    implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
-    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+    implementation group: 'com.google.auto.value', name: 'auto-value-annotations'
+    implementation group: 'com.google.guava', name: 'guava'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value'
 }

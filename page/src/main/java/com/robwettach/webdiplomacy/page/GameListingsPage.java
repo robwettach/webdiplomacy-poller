@@ -7,6 +7,8 @@ import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,6 +18,8 @@ import org.jsoup.select.Elements;
  */
 @AutoValue
 public abstract class GameListingsPage {
+    private static final Logger LOG = LogManager.getLogger(GameListingsPage.class);
+
     public abstract ImmutableMap<Integer, GamePanel> getGamePanels();
 
     /**
@@ -28,7 +32,9 @@ public abstract class GameListingsPage {
      * @throws IOException if there is an error downloading the game listing data from the Internet
      */
     public static GameListingsPage load(Map<String, String> cookies) throws IOException {
-        return fromDocument(Jsoup.connect("http://webdiplomacy.net/gamelistings.php?gamelistType=My%20games")
+        String url = "http://webdiplomacy.net/gamelistings.php?gamelistType=My%20games";
+        LOG.debug("Loading games from {}", url);
+        return fromDocument(Jsoup.connect(url)
                 .cookies(cookies)
                 .get());
     }

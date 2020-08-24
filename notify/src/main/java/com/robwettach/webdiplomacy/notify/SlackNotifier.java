@@ -13,6 +13,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * {@link Notifier} that sends notifications to a Slack webhook, configured as per
@@ -20,6 +22,7 @@ import java.util.Map;
  */
 @AutoValue
 public abstract class SlackNotifier implements Notifier {
+    private static final Logger LOG = LogManager.getLogger(SlackNotifier.class);
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     public abstract String getWebhookUrl();
@@ -30,14 +33,14 @@ public abstract class SlackNotifier implements Notifier {
 
     @Override
     public void notify(List<Diff> diffs) {
+        LOG.info("Sending {} diffs to Slack", diffs.size());
         String content = diffs.stream().filter(Diff::isGlobal).map(d -> "- " + d).collect(joining("\n"));
         Map<String, String> body = ImmutableMap.of("content", content);
         String bodyJson;
         try {
             bodyJson = OBJECT_MAPPER.writeValueAsString(body);
         } catch (JsonProcessingException e) {
-            System.err.println("Failed to render JSON");
-            e.printStackTrace();
+            LOG.error("Failed to render JSON", e);
             return;
         }
         HttpRequest request = HttpRequest.newBuilder()
@@ -48,12 +51,11 @@ public abstract class SlackNotifier implements Notifier {
         try {
             response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
         } catch (IOException | InterruptedException e) {
-            System.err.println("Failed to POST to Slack");
-            e.printStackTrace();
+            LOG.error("Failed to POST to Slack", e);
             return;
         }
         if (response.statusCode() != 200) {
-            System.err.printf("%d - %s%n", response.statusCode(), response.body());
+            LOG.warn("Non-OK status received from Slack: {} - {}", response.statusCode(), response.body());
         }
     }
 }

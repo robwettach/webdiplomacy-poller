@@ -4,8 +4,9 @@ plugins {
 
 dependencies {
     // 'api' instead of 'implementation' https://github.com/google/auto/issues/620
-    api group: 'com.google.auto.value', name: 'auto-value-annotations', version: '1.7.4'
-    api group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+    api group: 'com.google.auto.value', name: 'auto-value-annotations'
+    api group: 'com.google.guava', name: 'guava'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api'
     implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
-    annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: '1.7.4'
+    annotationProcessor group: 'com.google.auto.value', name: 'auto-value'
 }

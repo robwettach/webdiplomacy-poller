@@ -22,6 +22,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * {@link CookieProvider} that manages cookies on local disk.
@@ -32,6 +34,8 @@ import java.util.Map;
  * <p>Writes cookies to {@code WEBDIP_POLLER_HOME/cookies.json}.
  */
 public class LocalCookieProvider implements CookieProvider {
+    private static final Logger LOG = LogManager.getLogger(LocalCookieProvider.class);
+
     private static final String COOKIES_FILE_NAME = "cookies.json";
 
     private final Path cookiesPath;
@@ -44,12 +48,11 @@ public class LocalCookieProvider implements CookieProvider {
     @Override
     public Map<String, String> getCookies() {
         if (Files.exists(cookiesPath)) {
-            System.out.println("Loading cookies from: " + cookiesPath);
+            LOG.info("Loading cookies from: {}", cookiesPath);
             try {
                 return OBJECT_MAPPER.readValue(cookiesPath.toFile(), new TypeReference<>() {});
             } catch (IOException e) {
-                System.err.println("Failed to read cookies from: " + cookiesPath);
-                e.printStackTrace();
+                LOG.error("Failed to read cookies from: {}", cookiesPath, e);
                 return null;
             }
         } else {
@@ -71,8 +74,7 @@ public class LocalCookieProvider implements CookieProvider {
                         .header("Content-Type", "application/x-www-form-urlencoded")
                         .build();
             } catch (UnsupportedEncodingException e) {
-                System.err.println("Failed to encode login body");
-                e.printStackTrace();
+                LOG.error("Failed to encode login body", e);
                 return null;
             }
             HttpResponse<String> loginResponse;
@@ -80,8 +82,7 @@ public class LocalCookieProvider implements CookieProvider {
                 HttpClient client = HttpClient.newHttpClient();
                 loginResponse = client.send(loginRequest, HttpResponse.BodyHandlers.ofString());
             } catch (IOException | InterruptedException e) {
-                System.err.println("Failed to login");
-                e.printStackTrace();
+                LOG.error("Failed to login", e);
                 return null;
             }
             Map<String, String> cookies = loginResponse.headers()
@@ -93,9 +94,9 @@ public class LocalCookieProvider implements CookieProvider {
             try {
                 OBJECT_MAPPER.writeValue(cookiesPath.toFile(), cookies);
             } catch (IOException e) {
-                System.err.println("Failed to store cookies to: " + cookiesPath);
-                e.printStackTrace();
+                LOG.error("Failed to store cookies to: {}", cookiesPath, e);
             }
+            LOG.info("Authenticated as {} and stored cookies to: {}", username, cookiesPath);
             return cookies;
         }
     }

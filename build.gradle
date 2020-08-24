@@ -21,4 +21,19 @@ allprojects {
         // Enable Jackson's `ParameterNamesModule` to avoid using `@JsonProperty("name")` syntax
         options.compilerArgs += '-parameters'
     }
+
+    plugins.withType(JavaPlugin).whenPluginAdded {
+        dependencies {
+            constraints {
+                def autoValueVersion = '1.7.4'
+                def log4j2Version = '2.13.3'
+
+                implementation group: 'com.google.auto.value', name: 'auto-value-annotations', version: autoValueVersion
+                implementation group: 'com.google.guava', name: 'guava', version: '29.0-jre'
+                implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4j2Version
+                implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4j2Version
+                annotationProcessor group: 'com.google.auto.value', name: 'auto-value', version: autoValueVersion
+            }
+        }
+    }
 }
