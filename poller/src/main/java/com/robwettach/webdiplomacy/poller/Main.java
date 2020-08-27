@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
  * Main entry point for the webDiplomacy Poller local CLI application.
  */
 public class Main {
-    private static final Logger LOG = LogManager.getLogger(Main.class);
+    private static Logger LOG;
 
     public static final String ENV_SLACK_WEBHOOK_URL = "SLACK_WEBHOOK_URL";
     public static final String ENV_WEBDIP_POLLER_HOME = "WEBDIP_POLLER_HOME";
@@ -39,10 +39,12 @@ public class Main {
      */
     public static void main(String... args) throws InterruptedException {
         // Set the `webdipPollerRoot` property *immediately* so that it's available to Log4j2 before any logging is done
-        // Alternatively, could not set the `LOG` variable until after this point, or "reconfigure" the logger
         // https://stackoverflow.com/a/14877698
         Path configDir = getConfigDir();
         System.setProperty("webdipPollerRoot", configDir.toString());
+        // We can't set this as a `static final` constant because before wepdipPollerRoot is set, Log4j2 creates a
+        // directory named "./${sys:webdipPollerRoot}/logs"
+        LOG = LogManager.getLogger(Main.class);
 
         System.out.println("Starting webDiplomacy Poller");
         System.out.printf("Writing logs to %s/logs/webdiplomacy-poller-%s.log%n%n", configDir, LocalDate.now());
