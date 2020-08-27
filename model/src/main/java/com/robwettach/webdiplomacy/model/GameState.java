@@ -27,6 +27,7 @@ public abstract class GameState {
     public abstract GameDate getDate();
     public abstract GamePhase getPhase();
     public abstract boolean isPaused();
+    public abstract boolean isFinished();
     public abstract Optional<ZonedDateTime> getNextTurnAt();
     public abstract ImmutableSet<CountryState> getCountries();
 
@@ -71,9 +72,10 @@ public abstract class GameState {
     @AutoValue.Builder
     public abstract static class Builder {
         @JsonCreator
-        public static Builder builder() {
+        static Builder builder() {
             return new AutoValue_GameState.Builder()
-                    .paused(false);
+                    .paused(false)
+                    .finished(false);
         }
 
         @JsonProperty
@@ -86,6 +88,8 @@ public abstract class GameState {
         public abstract Builder phase(GamePhase phase);
         @JsonProperty
         public abstract Builder paused(boolean paused);
+        @JsonProperty
+        public abstract Builder finished(boolean paused);
         @JsonProperty
         // @Nullable because Jackson renders `null` explicitly and then passes `null` into this when deserializing.
         // By default, AutoValue uses Optional.of(...) instead of Optional.ofNullable(...)

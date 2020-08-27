@@ -5,10 +5,13 @@ package com.robwettach.webdiplomacy.model;
  */
 public enum CountryStatus {
     NoOrders("-"),
+    NotReceived("Not received"),
     Completed("Completed"),
     Ready("Ready"),
-    NotReceived("Not received"),
-    Defeated("Defeated");
+    Defeated("Defeated"),
+    Survived("Survived"),
+    Drawn("Drawn"),
+    Won("Won");
 
     private final String value;
 

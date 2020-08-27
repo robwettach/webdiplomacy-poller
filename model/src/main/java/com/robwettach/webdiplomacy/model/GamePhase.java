@@ -7,7 +7,8 @@ public enum GamePhase {
     PreGame("Pre-game"),
     Diplomacy("Diplomacy"),
     Retreats("Retreats"),
-    Builds("Builds");
+    Builds("Builds"),
+    Finished("Finished");
 
     private final String value;
 

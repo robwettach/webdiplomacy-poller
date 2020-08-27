@@ -22,7 +22,6 @@ public abstract class MemberRow {
 
     private static final Pattern SUPPLY_CENTERS_UNITS_PATTERN = Pattern.compile(
             format("(?<%s>\\d+) supply-centers, (?<%s>\\d+) units", SUPPLY_CENTERS_KEY, UNITS_KEY));
-    public static final String DEFEATED = "Defeated";
     public static final String NO_ORDERS = "-";
 
     public abstract String getCountryName();
@@ -48,8 +47,8 @@ public abstract class MemberRow {
         int unitCount = 0;
 
         Elements memberStatus = element.select(".memberStatus > em");
-        if (!memberStatus.isEmpty() && DEFEATED.equals(memberStatus.first().text())) {
-            status = DEFEATED;
+        if (!memberStatus.isEmpty()) {
+            status = memberStatus.first().text();
         } else {
             String scUnits = element.select(".memberSCCount").first().text();
             Matcher scUnitMatcher = SUPPLY_CENTERS_UNITS_PATTERN.matcher(scUnits);

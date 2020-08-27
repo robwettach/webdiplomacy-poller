@@ -94,6 +94,7 @@ public class Poller {
                 .date(GameDate.parse(titleBar.getDate()))
                 .phase(GamePhase.fromString(titleBar.getPhase()))
                 .paused(titleBar.isPaused())
+                .finished(titleBar.isFinished())
                 .nextTurnAt(titleBar.getNextTurnAt().orElse(null));
 
         builder.countries(page.getMembersTable()

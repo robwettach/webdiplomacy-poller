@@ -16,6 +16,7 @@ public abstract class GameTitleBar {
     public abstract String getDate();
     public abstract String getPhase();
     public abstract boolean isPaused();
+    public abstract boolean isFinished();
     public abstract Optional<ZonedDateTime> getNextTurnAt();
 
     /**
@@ -42,17 +43,20 @@ public abstract class GameTitleBar {
         String phase = element.select(".gamePhase").first().text();
 
         boolean paused = false;
+        boolean finished = false;
         Optional<ZonedDateTime> nextTurnAt = Optional.empty();
 
         Element gameTimeRemaining = element.select(".gameTimeRemaining").first();
         if (gameTimeRemaining.text().startsWith("Paused")) {
             paused = true;
+        } else if (gameTimeRemaining.text().startsWith("Finished")) {
+            finished = true;
         } else {
             String next = element.select("span.timeremaining").first().attr("unixtime");
             nextTurnAt = Optional.of(ZonedDateTime.ofInstant(
                     Instant.ofEpochSecond(Long.parseLong(next)),
                     ZoneOffset.UTC));
         }
-        return new AutoValue_GameTitleBar(name, date, phase, paused, nextTurnAt);
+        return new AutoValue_GameTitleBar(name, date, phase, paused, finished, nextTurnAt);
     }
 }
