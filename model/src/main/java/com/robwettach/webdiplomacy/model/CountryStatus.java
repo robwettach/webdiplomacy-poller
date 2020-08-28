@@ -9,6 +9,7 @@ public enum CountryStatus {
     Completed("Completed"),
     Ready("Ready"),
     Defeated("Defeated"),
+    // End game-only statuses
     Survived("Survived"),
     Drawn("Drawn"),
     Won("Won");

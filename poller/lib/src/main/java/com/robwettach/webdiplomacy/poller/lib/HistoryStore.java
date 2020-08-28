@@ -1,5 +1,6 @@
 package com.robwettach.webdiplomacy.poller.lib;
 
+import com.robwettach.webdiplomacy.notify.Snapshot;
 import java.util.List;
 import java.util.Optional;
 

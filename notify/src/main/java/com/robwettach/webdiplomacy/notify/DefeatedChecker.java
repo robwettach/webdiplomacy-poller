@@ -8,7 +8,6 @@ import com.robwettach.webdiplomacy.model.CountryState;
 import com.robwettach.webdiplomacy.model.CountryStatus;
 import com.robwettach.webdiplomacy.model.GameState;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -16,17 +15,11 @@ import java.util.Set;
  * {@link DiffChecker} that reports when a country has been defeated.
  */
 public class DefeatedChecker implements DiffChecker {
-    private Set<String> defeatedCountries = new HashSet<>();
-
     @Override
-    public List<Diff> check(GameState state) {
-        Set<String> currentDefeatedCountries = state.getCountries()
-                .stream()
-                .filter(c -> c.getStatus().equals(CountryStatus.Defeated))
-                .map(CountryState::getCountryName)
-                .collect(toSet());
-        Set<String> newDefeatedCountries = Sets.difference(currentDefeatedCountries, defeatedCountries);
-        defeatedCountries = currentDefeatedCountries;
+    public List<Diff> check(Snapshot previous, Snapshot current) {
+        Set<String> previousDefeatedCountries = getDefeatedCountries(previous.getState());
+        Set<String> currentDefeatedCountries = getDefeatedCountries(current.getState());
+        Set<String> newDefeatedCountries = Sets.difference(currentDefeatedCountries, previousDefeatedCountries);
         if (!newDefeatedCountries.isEmpty()) {
             return newDefeatedCountries.stream()
                     .map(c -> Diff.global("%s has been defeated", c))
@@ -34,5 +27,13 @@ public class DefeatedChecker implements DiffChecker {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private Set<String> getDefeatedCountries(GameState state) {
+        return state.getCountries()
+                .stream()
+                .filter(c -> c.getStatus().equals(CountryStatus.Defeated))
+                .map(CountryState::getCountryName)
+                .collect(toSet());
     }
 }

@@ -13,6 +13,7 @@ import com.robwettach.webdiplomacy.model.Vote;
 import com.robwettach.webdiplomacy.notify.Diff;
 import com.robwettach.webdiplomacy.notify.GameNotifications;
 import com.robwettach.webdiplomacy.notify.Notifier;
+import com.robwettach.webdiplomacy.notify.Snapshot;
 import com.robwettach.webdiplomacy.page.CountryUserLink;
 import com.robwettach.webdiplomacy.page.GameBoardPage;
 import com.robwettach.webdiplomacy.page.GameTitleBar;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
@@ -47,13 +49,6 @@ public class Poller {
         this.gameId = gameId;
         this.history = history;
         this.notifications = new GameNotifications(notifier);
-        prepare();
-    }
-
-    private void prepare() {
-        List<Snapshot> snapshots = history.getSnapshotsForGame(gameId);
-        snapshots.stream().map(Snapshot::getState).forEach(notifications::updateSilently);
-        LOG.info("Prepared {} snapshots for game {}", snapshots.size(), gameId);
     }
 
     /**
@@ -73,13 +68,13 @@ public class Poller {
         ZonedDateTime snapshotDate = ZonedDateTime.now(ZoneOffset.UTC);
         Snapshot current = Snapshot.create(snapshotDate, state);
 
-        List<Diff> diffs = notifications.updateAndNotify(state);
+        Optional<Snapshot> previous = history.getLatestSnapshotForGame(gameId);
+        List<Diff> diffs = previous.map(p -> notifications.updateAndNotify(p, current)).orElse(Collections.emptyList());
         LOG.info("Found {} diffs at {} for game {}", diffs.size(), snapshotDate, gameId);
 
         // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
         // We track more pieces of state than we notify about (SC/unit count, etc), and we want to notify
         // even if there's no state change, specifically for the "one hour remaining" case.
-        Optional<Snapshot> previous = history.getLatestSnapshotForGame(gameId);
         if (previous.isEmpty() || !previous.get().getState().equals(current.getState())) {
             history.addSnapshot(gameId, current);
         }
