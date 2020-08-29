@@ -1,0 +1,13 @@
+Resources:
+  Poller:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code: build/distributions/webdiplomacy-poller-lambda-0.1.zip
+      Environment:
+        Variables:
+          GAME_HISTORY_TABLE_NAME: GameHistoryRecords
+      Handler: com.robwettach.webdiplomacy.poller.lambda.LambdaPoller::handle
+      MemorySize: 512
+      Runtime: java11
+      Timeout: 60
+

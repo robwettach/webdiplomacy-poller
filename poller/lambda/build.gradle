@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    maven {
+        url 'https://s3-us-west-2.amazonaws.com/dynamodb-local/release'
+    }
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+build.dependsOn buildZip
+
+dependencies {
+    implementation project(':json')
+    implementation project(':poller:lib')
+    implementation platform(group: 'software.amazon.awssdk', name:'bom', version: '2.14.5')
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.2.1'
+    implementation group: 'com.amazonaws', name: 'aws-lambda-java-events', version: '2.2.9'
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-api'
+    implementation group: 'software.amazon.awssdk', name: 'dynamodb'
+    implementation group: 'software.amazon.awssdk', name: 'dynamodb-enhanced'
+    runtimeOnly group: 'com.amazonaws', name: 'aws-lambda-java-log4j2', version: '1.2.0'
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core'
+    testImplementation group: 'com.amazonaws', name: 'DynamoDBLocal', version: '[1.12,2.0)'
+    testImplementation group: 'com.spotify', name: 'hamcrest-optional', version: '1.2.0'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.2'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.6'
+}
+
+test {
+    useJUnitPlatform()
+}

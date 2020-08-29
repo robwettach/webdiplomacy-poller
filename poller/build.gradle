@@ -11,6 +11,6 @@ dependencies {
     implementation project(':json')
     implementation project(':poller:lib')
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core'
     implementation group: 'com.google.guava', name: 'guava'
+    runtimeOnly group: 'org.apache.logging.log4j', name: 'log4j-core'
 }
