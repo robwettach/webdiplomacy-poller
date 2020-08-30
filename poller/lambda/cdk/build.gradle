@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+application {
+    mainClassName = 'com.robwettach.webdiplomacy.poller.lambda.cdk.Main'
+}
+
+def cdkVersion = '[1.61,2.0)'
+
+configurations {
+    cdkAssets {
+        canBeResolved(true)
+        canBeConsumed(false)
+
+        runtimeOnly.extendsFrom(cdkAssets)
+    }
+}
+
+dependencies {
+    implementation group: 'software.amazon.awscdk', name: 'core', version: cdkVersion
+    implementation group: 'software.amazon.awscdk', name: 'dynamodb', version: cdkVersion
+    implementation group: 'software.amazon.awscdk', name: 'events', version: cdkVersion
+    implementation group: 'software.amazon.awscdk', name: 'events-targets', version: cdkVersion
+    implementation group: 'software.amazon.awscdk', name: 'iam', version: cdkVersion
+    implementation group: 'software.amazon.awscdk', name: 'lambda', version: cdkVersion
+    cdkAssets(project(path: ':poller:lambda', configuration: 'lambdaAsset'))
+}
+
+run {
+    doFirst {
+        def zip = configurations.cdkAssets.resolve().find { it.name.endsWith(".zip") }
+        environment("POLLER_LAMBDA_ZIP", zip)
+    }
+}

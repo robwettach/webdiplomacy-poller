@@ -24,7 +24,7 @@ to build and run in your terminal.  Some helpful Gradle tasks:
   you can run the executable directly from here
 
 ### Design
-There are (currently) seven different Gradle projects:
+There are (currently) eight different Gradle projects:
 * `json` - Provides a specially-configured [Jackson](https://github.com/FasterXML/jackson) `ObjectMapper` to be used
   throughout the project for consistency.
 * `model` - [Google AutoValue](https://github.com/google/auto/blob/master/value/userguide/index.md)-based model classes
@@ -33,7 +33,8 @@ There are (currently) seven different Gradle projects:
 * `notify` - Logic to detect changes between subsequent game states and send notifications.  Currently supports multiple
   state transitions (defeated, 1-hour remaining, messages, orders, paused, phase change, votes) and sending
   notifications to `stdout` and Slack
-* `poller-lambda` - Lambda implementation of the poller, backed by DynamoDB.
+* `poller-lambda` - Lambda implementation of the poller, backed by DynamoDB
+* `poller-lambda-cdk` - CDK configuration for deploying `poller-lambda` to AWS
 * `poller-lib` - Library that ties together the logic for polling a single *webDiplomacy* game, exposing interfaces to
    allow clients to control how game history is stored and how notifications are sent
 * `poller` - Top-level CLI application.  Configures storage of state to local disk and orchestrates polling
