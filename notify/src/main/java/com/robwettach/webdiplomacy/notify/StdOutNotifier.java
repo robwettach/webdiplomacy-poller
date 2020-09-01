@@ -24,4 +24,14 @@ public class StdOutNotifier implements Notifier {
             diffs.forEach(d -> System.out.printf("- %s%n", d));
         }
     }
+
+    @Override
+    public int hashCode() {
+        return "StdOutNotifier".hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof StdOutNotifier;
+    }
 }

@@ -10,6 +10,7 @@ dependencies {
     implementation group: 'one.util', name: 'streamex', version: '0.7.3'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api'
     annotationProcessor group: 'com.google.auto.value', name: 'auto-value'
+    testImplementation group: 'com.spotify', name: 'hamcrest-optional', version: '1.2.0'
     testImplementation group: 'org.hamcrest', name: 'hamcrest', version: '2.2'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.6.2'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.5.6'

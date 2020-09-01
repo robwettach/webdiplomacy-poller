@@ -3,6 +3,7 @@ package com.robwettach.webdiplomacy.notify;
 import static com.robwettach.webdiplomacy.json.Json.OBJECT_MAPPER;
 import static java.util.stream.Collectors.joining;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
@@ -27,6 +28,7 @@ public abstract class SlackNotifier implements Notifier {
 
     public abstract String getWebhookUrl();
 
+    @JsonCreator
     public static SlackNotifier create(String webhookUrl) {
         return new AutoValue_SlackNotifier(webhookUrl);
     }
