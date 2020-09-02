@@ -11,7 +11,7 @@ import com.robwettach.webdiplomacy.model.GameState;
 import com.robwettach.webdiplomacy.model.UserInfo;
 import com.robwettach.webdiplomacy.model.Vote;
 import com.robwettach.webdiplomacy.notify.Diff;
-import com.robwettach.webdiplomacy.notify.GameNotifications;
+import com.robwettach.webdiplomacy.notify.DiffCheckers;
 import com.robwettach.webdiplomacy.notify.Notifier;
 import com.robwettach.webdiplomacy.notify.Snapshot;
 import com.robwettach.webdiplomacy.page.CountryUserLink;
@@ -36,7 +36,7 @@ public class Poller {
 
     private final int gameId;
     private final HistoryStore history;
-    private final GameNotifications notifications;
+    private final Notifier notifier;
 
     /**
      * Create a {@link Poller} for a given game.
@@ -48,7 +48,7 @@ public class Poller {
     public Poller(int gameId, HistoryStore history, Notifier notifier) {
         this.gameId = gameId;
         this.history = history;
-        this.notifications = new GameNotifications(notifier);
+        this.notifier = notifier;
     }
 
     /**
@@ -69,8 +69,9 @@ public class Poller {
         Snapshot current = Snapshot.create(snapshotDate, state);
 
         Optional<Snapshot> previous = history.getLatestSnapshotForGame(gameId);
-        List<Diff> diffs = previous.map(p -> notifications.updateAndNotify(p, current)).orElse(Collections.emptyList());
+        List<Diff> diffs = previous.map(p -> DiffCheckers.check(p, current)).orElse(Collections.emptyList());
         LOG.info("Found {} diffs at {} for game {}", diffs.size(), snapshotDate, gameId);
+        notifier.notify(diffs);
 
         // Diffs imply a change, and a change implies diffs, but it's not necessarily 1-to-1
         // We track more pieces of state than we notify about (SC/unit count, etc), and we want to notify
