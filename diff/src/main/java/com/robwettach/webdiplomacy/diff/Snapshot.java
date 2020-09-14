@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.notify;
+package com.robwettach.webdiplomacy.diff;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

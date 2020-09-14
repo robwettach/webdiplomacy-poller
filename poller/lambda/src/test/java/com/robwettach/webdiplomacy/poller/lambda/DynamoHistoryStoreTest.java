@@ -11,12 +11,12 @@ import static org.hamcrest.Matchers.is;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Iterables;
+import com.robwettach.webdiplomacy.diff.Snapshot;
 import com.robwettach.webdiplomacy.json.Json;
 import com.robwettach.webdiplomacy.model.GameDate;
 import com.robwettach.webdiplomacy.model.GamePhase;
 import com.robwettach.webdiplomacy.model.GameState;
 import com.robwettach.webdiplomacy.model.Season;
-import com.robwettach.webdiplomacy.notify.Snapshot;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;

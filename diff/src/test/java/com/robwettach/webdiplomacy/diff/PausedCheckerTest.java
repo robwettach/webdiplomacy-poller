@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.notify;
+package com.robwettach.webdiplomacy.diff;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;

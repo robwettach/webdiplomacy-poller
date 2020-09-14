@@ -5,7 +5,6 @@ plugins {
 dependencies {
     api group: 'com.google.auto.value', name: 'auto-value-annotations'
     api group: 'com.google.guava', name: 'guava'
-    api project(':diff')
     implementation project(':json')
     implementation project(':model')
     implementation group: 'one.util', name: 'streamex', version: '0.7.3'

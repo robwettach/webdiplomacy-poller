@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.notify;
+package com.robwettach.webdiplomacy.diff;
 
 import com.robwettach.webdiplomacy.model.DatePhase;
 import com.robwettach.webdiplomacy.model.GamePhase;

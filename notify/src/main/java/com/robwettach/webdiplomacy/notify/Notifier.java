@@ -1,5 +1,6 @@
 package com.robwettach.webdiplomacy.notify;
 
+import com.robwettach.webdiplomacy.diff.Diff;
 import java.util.List;
 
 /**

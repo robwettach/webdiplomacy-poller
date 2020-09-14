@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.ImmutableList;
+import com.robwettach.webdiplomacy.diff.Diff;
 import com.robwettach.webdiplomacy.json.Json;
 import java.util.Collections;
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.robwettach.webdiplomacy.notify;
 
+import com.robwettach.webdiplomacy.diff.Diff;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.robwettach.webdiplomacy.notify;
+package com.robwettach.webdiplomacy.diff;
 
 import java.util.Collections;
 import java.util.List;

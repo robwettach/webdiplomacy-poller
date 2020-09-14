@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
+import com.robwettach.webdiplomacy.diff.Diff;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;

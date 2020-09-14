@@ -3,7 +3,7 @@ package com.robwettach.webdiplomacy.poller.lambda;
 import static java.util.stream.Collectors.toList;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.robwettach.webdiplomacy.notify.Snapshot;
+import com.robwettach.webdiplomacy.diff.Snapshot;
 import com.robwettach.webdiplomacy.poller.lib.HistoryStore;
 import java.util.List;
 import java.util.Optional;

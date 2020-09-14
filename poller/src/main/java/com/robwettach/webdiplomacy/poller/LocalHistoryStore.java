@@ -8,7 +8,7 @@ import static java.lang.String.format;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.robwettach.webdiplomacy.notify.Snapshot;
+import com.robwettach.webdiplomacy.diff.Snapshot;
 import com.robwettach.webdiplomacy.poller.lib.HistoryStore;
 import java.io.IOException;
 import java.nio.file.Files;
